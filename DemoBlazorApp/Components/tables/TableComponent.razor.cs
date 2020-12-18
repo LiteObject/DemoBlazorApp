@@ -7,7 +7,9 @@
     using System.Data;
     using System.Globalization;
     using System.Linq;
+    using System.Net.Http.Headers;
     using System.Reflection;
+    using System.Text.Json;
 
     using DemoBlazorApp.Library;
     using DemoBlazorApp.Models;
@@ -56,9 +58,24 @@
         /// <returns>
         /// The <see cref="object"/>.
         /// </returns>
-        private static object GetPropValue(object src, string propName)
+        private object GetPropValue(object src, string propName)
         {
             return src.GetType().GetProperty(propName)?.GetValue(src, null);
+        }
+
+        /// <summary>
+        /// The get initial match table data.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="List{T}"/>.
+        /// </returns>
+        private List<TableMathModel> GetInitialMatchTableData()
+        {
+            return new List<TableMathModel>()
+                       {
+                        new TableMathModel() { Id = 1, Name = "First Calculation", Number1 = 1, Number2 = 2, Number3 = 3 },
+                        new TableMathModel() { Id = 2, Name = "Second Calculation", Number1 = 1, Number2 = 0, Number3 = 0 }
+                       };
         }
 
         /// <summary>
@@ -106,6 +123,10 @@
                     this.table = this.GetDynamicTable(modelTwoList);
 
                     break;
+                case nameof(TableMathModel):
+                    var data = this.GetInitialMatchTableData();
+                    this.table = this.GetDynamicTable(data);
+                    break;
             }
         }
 
@@ -130,7 +151,8 @@
 
             for (var i = 0; i < props.Count; i++)
             {
-                myTable.Columns.Add(new TableColumn { Index = i, Name = props[i].Name });
+                Console.WriteLine($"Column Index: {i}, Name: {props[i].Name}, Type: {props[i].PropertyType.Name}");
+                myTable.Columns.Add(new TableColumn { Index = i, Name = props[i].Name, ValueType = props[i].PropertyType });
             }
 
             for (var i = 0; i < items.Count; i++)
@@ -166,6 +188,20 @@
                         this.table.Rows[index] = updatedObject.ToTableRow(index);
                     }
                 }
+
+                if(this.selectedTableType.Name == nameof(TableMathModel))
+                {
+                    var updatedObject = this.ConvertTableRowToType<TableMathModel>(row);
+                    var index = this.table.Rows.IndexOf(row);
+
+                    if (index != -1)
+                    {
+                        // Console.WriteLine($"Table Data: {JsonSerializer.Serialize(this.table)}");
+                        Console.WriteLine($"Name: {updatedObject.Name}");
+                        updatedObject.GetTotal();
+                        this.table.Rows[index] = updatedObject.ToTableRow(index);
+                    }
+                }
             }
         }
 
@@ -189,16 +225,87 @@
 
             foreach (var propertyInfo in properties)
             {
-                var cell = row.Cells.FirstOrDefault(c => c.ColumnName == propertyInfo.Name);
-                
-                if (cell != null)
+                try
                 {
-                    var newValue = Convert.ChangeType(cell.Value, propertyInfo.PropertyType);
-                    propertyInfo.SetValue(obj, newValue, null);
+                    var cell = row.Cells.FirstOrDefault(c => c.ColumnName == propertyInfo.Name);
+
+                    if (cell != null)
+                    {
+                        // ToDo: Need input validation.
+                        if (cell.ValueType.Name.StartsWith("Int")  && (decimal.TryParse(cell.Value, out var d) == false || d > 100))
+                        {
+                            Console.WriteLine($"Cell value is not in acceptable format: {cell.Value}");
+                            continue;
+                        }
+                        
+                        // var cellValue = cell.ValueType.Name.StartsWith("Int") && cell.Value.Trim() == string.Empty ? "0" : cell.Value.Trim();
+                        var newValue = Convert.ChangeType(cell.Value, propertyInfo.PropertyType);
+                        propertyInfo.SetValue(obj, newValue, null);
+                    }
+                }
+                catch (Exception e)
+                {
+                    // ToDo: try/catch to handle error: "System.FormatException: Input string was not in a correct format."
+                    Console.WriteLine(e);
                 }
             }
 
             return (T)obj;
+        }
+
+        /// <summary>
+        /// The add row.
+        /// </summary>
+        private void AddRow()
+        {
+            var newRow = new TableRow()
+            {
+                Index = this.table.Rows.Count + 1,
+                Cells = this.GenerateEmptyCells(this.table.Columns).ToList()
+            };
+
+            this.table.Rows.Add(newRow);
+        }
+
+        /// <summary>
+        /// The remove row.
+        /// </summary>
+        /// <param name="row">
+        /// The row.
+        /// </param>
+        private void RemoveRow(TableRow row)
+        {
+            this.table.Rows.Remove(row);
+        }
+
+        /// <summary>
+        /// The generate empty cells.
+        /// </summary>
+        /// <param name="columns">
+        /// The columns.
+        /// </param>
+        /// <returns>
+        /// The <see cref="IList{T}"/>.
+        /// </returns>
+        private IList<TableCell> GenerateEmptyCells(List<TableColumn> columns)
+        {
+            var cells = new List<TableCell>();
+
+            foreach (var col in columns)
+            {
+                var value = col.ValueType.Name == "String" ? string.Empty : "0";
+
+                var cell = new TableCell()
+                               {
+                                   ValueType = col.ValueType,
+                                   ColumnName = col.Name,
+                                   Value = value,
+                               };
+
+                cells.Add(cell);
+            }
+
+            return cells;
         }
     }
 }

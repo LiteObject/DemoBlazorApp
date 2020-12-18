@@ -8,6 +8,8 @@ namespace DemoBlazorApp
 
     using Blazored.LocalStorage;
 
+    using DemoBlazorApp.Services;
+
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +38,7 @@ namespace DemoBlazorApp
 
             builder.Services.AddSingleton<StateContainer>();
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<ITableService, TableService>();
 
             await builder.Build().RunAsync();
         }

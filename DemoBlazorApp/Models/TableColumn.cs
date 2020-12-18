@@ -1,5 +1,8 @@
 ﻿namespace DemoBlazorApp.Models
 {
+    using System;
+    using System.Text.Json.Serialization;
+
     /// <summary>
     ///     The table column.
     /// </summary>
@@ -14,5 +17,11 @@
         ///     Gets or sets the name.
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the data type.
+        /// </summary>
+        [JsonIgnore]
+        public Type ValueType { get; set; }
     }
 }

@@ -6,20 +6,30 @@
     using System.Threading.Tasks;
 
     using DemoBlazorApp.Models;
+    using DemoBlazorApp.Services;
 
     using Microsoft.AspNetCore.Components;
 
+    /// <summary>
+    /// The table.
+    /// </summary>
     public partial class Table
     {
         /// <summary>
-        /// The tables.
+        /// Gets or sets the table service.
         /// </summary>
-        private readonly List<TableType> tables = new List<TableType>();
+        [Inject]
+        public ITableService TableService { get; set; }
 
         /// <summary>
-        /// The selected table.
+        /// Gets or sets the table types.
         /// </summary>
-        public TableType SelectedTable { get; set; } = new TableType();
+        public List<TableType> TableTypes { get; set; } = new List<TableType>();
+
+        /// <summary>
+        /// Gets or sets the selected table type.
+        /// </summary>
+        public TableType SelectedTableType { get; set; } = new TableType();
 
         /// <summary>
         /// The on initialized async.
@@ -31,8 +41,8 @@
         {
             await base.OnInitializedAsync();
 
-            this.tables.Add(new TableType() { Id = 1, Name = nameof(TableOneModel), Description = "Table One" });
-            this.tables.Add(new TableType() { Id = 2, Name = nameof(TableTwoModel), Description = "Table Two" });
+            var tableTypes = this.TableService.GetTableTypes();
+            this.TableTypes.AddRange(tableTypes);
         }
 
         /// <summary>
@@ -47,12 +57,12 @@
             {
                 // ToDo: use TryParse
                 var id = obj.Value is null ? 0 : Convert.ToInt32(obj.Value);
-                this.SelectedTable = this.tables.FirstOrDefault(t => t.Id == id);
+                this.SelectedTableType = this.TableTypes.FirstOrDefault(t => t.Id == id);
 
                 // ToDo: Throw exception
-                if (this.SelectedTable != null && this.SelectedTable.Id == 0)
+                if (this.SelectedTableType != null && this.SelectedTableType.Id == 0)
                 {
-                    Console.WriteLine($"Unable to set {nameof(this.SelectedTable)} value.");
+                    Console.WriteLine($"Unable to set {nameof(this.SelectedTableType)} value.");
                 }
             }
             catch (Exception e)

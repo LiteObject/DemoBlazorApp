@@ -1,6 +1,7 @@
 ﻿namespace DemoBlazorApp.Models
 {
     using System;
+    using System.Text.Json.Serialization;
 
     /// <summary>
     ///     The table cell.
@@ -30,6 +31,7 @@
         /// <summary>
         /// Gets or sets the value type.
         /// </summary>
+        [JsonIgnore]
         public Type ValueType
         {
             get => this.valueType;

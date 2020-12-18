@@ -5,15 +5,15 @@
 
 <select class="custom-select shadow-sm" @onchange="OnTableSelection">
     <option value="0">--Select Table Type--</option>
-    @foreach (var table in tables)
+    @foreach (var tableType in TableTypes)
     {
-        <option value="@table.Id">@table.Name</option>
+        <option value="@tableType.Id">@tableType.Name</option>
     }
 </select>
 <br />
 <br />
-@if(SelectedTable != null && SelectedTable.Id != 0)
+@if(SelectedTableType != null && SelectedTableType.Id != 0)
 {
     @*<div>@SelectedTable.Name</div>*@
-    <TableComponent SelectedTableType="@SelectedTable"></TableComponent>
+    <TableComponent SelectedTableType="@SelectedTableType"></TableComponent>
 }
