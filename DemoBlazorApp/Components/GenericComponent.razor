@@ -1,0 +1,39 @@
+﻿@typeparam T
+<div class="alert alert-info">Table Type: @typeof(T)</div>
+
+@if (this.Items?.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>@TableHeader</tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Items)
+        {
+            <tr>
+                @RowTemplate(item)
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <ul>
+   
+    </ul>
+}
+else
+{
+    <div>No items to display</div>
+}
+
+@code {
+
+    [Parameter]
+    public RenderFragment TableHeader { get; set; }
+
+    [Parameter]
+    public RenderFragment<T> RowTemplate { get; set; }
+
+    [Parameter]
+    public IReadOnlyList<T> Items { get; set; }
+}

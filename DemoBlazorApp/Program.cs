@@ -7,7 +7,7 @@ namespace DemoBlazorApp
     using System.Threading.Tasks;
 
     using Blazored.LocalStorage;
-
+    using DemoBlazorApp.Library;
     using DemoBlazorApp.Services;
 
     using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -36,6 +36,7 @@ namespace DemoBlazorApp
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
+            builder.Services.AddScoped<ITableFactory, TableFactory>();
             builder.Services.AddSingleton<StateContainer>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<ITableService, TableService>();

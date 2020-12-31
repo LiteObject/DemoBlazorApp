@@ -18,6 +18,9 @@
         /// </summary>
         public string Name { get; set; }
 
+
+        public string Description { get; set; }
+
         /// <summary>
         /// Gets or sets the data type.
         /// </summary>

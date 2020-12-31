@@ -4,6 +4,7 @@
     using System.Linq;
 
     using DemoBlazorApp.Models;
+    using DemoBlazorApp.Models.TableTypes;
 
     /// <summary>
     /// The table service.
@@ -34,10 +35,18 @@
                 new TableType
                     {
                         Id = 3,
-                        Name = nameof(TableMathModel),
+                        Name = nameof(AddThreeNumbersModel),
                         Description = "Add three number",
-                        Type = typeof(TableMathModel)
+                        Type = typeof(AddThreeNumbersModel)
                     });
+            this.tables.Add(
+                    new TableType {
+                        Id = 4,
+                        Name = nameof(AddFourNumbersModel),
+                        Description = "Add Four Number",
+                        Type = typeof(AddFourNumbersModel)
+                    }
+                );
         }
 
         /// <summary>

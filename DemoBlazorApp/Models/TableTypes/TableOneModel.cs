@@ -15,7 +15,8 @@
         /// <summary>
         /// Gets or sets the column one.
         /// </summary>
-        [Order(3)]
-        public string Email { get; set; }
+        [Order]
+        [HtmlInput(key: "type", value: "text")]
+        public string Email { get; set; } = "...@email.com";
     }
 }

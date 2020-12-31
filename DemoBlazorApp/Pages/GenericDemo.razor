@@ -1,0 +1,48 @@
+﻿@page "/generic"
+@using DemoBlazorApp.Components;
+@using DemoBlazorApp.Library
+
+<h3>Generic Demo</h3>
+
+<select class="form-control" @onchange="OnSelection">
+    <option value="0">-- Select Model --</option>
+    <option value="Pet">Pet</option>
+    <option value="Person">Owner</option>
+</select>
+
+@if(string.IsNullOrWhiteSpace(this.selectedModel) == false && items != null)
+{
+    <br />
+    <GenericComponent Items="items">
+        <TableHeader>
+            @foreach (var col in columns)
+            {
+                <th>@col</th>
+            }
+        </TableHeader>
+        <RowTemplate Context="item">
+            @{
+                var cells = item.GetType().GetProperties();
+            }
+            
+            @if(cells != null && cells.Any())
+            {
+                @foreach(var cell in cells)
+                {
+                    <td>test</td>
+                }
+            }
+        </RowTemplate>
+    </GenericComponent>
+
+    @*<ul>
+        @foreach(var item in items)
+        {
+             <li>@item.Name @item</li>
+        }
+    </ul>*@
+}
+else
+{
+    <div class="alert alert-info my-4">Please select an option from drop-down menu</div>
+}

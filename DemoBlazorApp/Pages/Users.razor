@@ -1,0 +1,32 @@
+﻿@page "/users"
+@using DemoBlazorApp.Models;
+
+<h3>Users</h3>
+
+
+
+
+<table>
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Name</td>
+            <td>Email</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in users) { 
+        <tr @onclick="@(() => OnUpdate(user))">
+            <td>
+            <input type="number" @bind-value="@user.Id" />
+                </td>
+            <td>
+                <input type="text" @bind-value="@user.Name" />
+                </td>
+            <td>
+                <input type="text" @bind-value="@user.Email" />                
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

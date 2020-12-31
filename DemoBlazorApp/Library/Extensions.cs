@@ -3,12 +3,15 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using System.Dynamic;
     using System.Linq;
     using System.Reflection;
     using System.Text.Json;
 
     using DemoBlazorApp.Models;
+
+    using MoreLinq;
 
     /// <summary>
     /// The extensions.
@@ -125,23 +128,46 @@
         /// <returns>
         /// The <see cref="IList{T}"/>.
         /// </returns>
-        public static List<TableCell> ToTableCells(this object obj)
+        public static List<TableCell> ToTableCells(this object obj, int rowIndex = 0)
         {
             List<TableCell> cells = new List<TableCell>();
 
             // var props = obj.GetType().GetProperties();
             var props = obj.GetType().GetSortedProperties().ToList();
-
+            
             for (var j = 0; j < props.Count; j++)
             {
                 var prop = props[j];
+                var rawAttributes = prop.GetCustomAttributes<HtmlInputAttribute>()?.ToList();
+
+                var inputAttributes = new Dictionary<string, object>();
+                
+                if (rawAttributes.Any() == false)
+                {
+                    Console.WriteLine("No input attributes found");
+                }
+                else
+                {
+                    var uniqueAttributes = rawAttributes.DistinctBy(a => a.Key);
+                    inputAttributes = uniqueAttributes.ToDictionary(a => a.Key, a => (object)a.Value);
+                }
+
+                var keyAttr = prop.GetCustomAttribute<KeyAttribute>();
+                
+                var cellValue = GetPropValue(obj, prop.Name)?.ToString();
+
+                if (keyAttr != null) {
+                    cellValue = rowIndex.ToString();
+                }
+
                 var cell = new TableCell
                                {
                                    Index = j,
-                                   ColumnName = prop.Name,
-                                   Value = GetPropValue(obj, prop.Name).ToString(),
-                                   ValueType = prop.PropertyType
-                               };
+                                   ColumnName = prop?.Name,
+                                   Value = cellValue,
+                                   ValueType = prop?.PropertyType,
+                                   InputAttributes = inputAttributes ?? new Dictionary<string, object>()
+                };
 
                 cells.Add(cell);
             }
@@ -163,7 +189,7 @@
         /// </returns>
         public static TableRow ToTableRow(this object obj, int index)
         {
-            TableRow row = new TableRow { Index = index, Cells = obj.ToTableCells() };
+            TableRow row = new TableRow { Index = index, Cells = obj.ToTableCells(index) };
             return row;
         }
 
@@ -181,7 +207,7 @@
             // ToDo: Handle props without "OrderAttribute"
             return t
                 .GetProperties()
-                .OrderBy(p => ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), false)[0]).Order);
+                .OrderBy(p => ((OrderAttribute)p.GetCustomAttributes(typeof(OrderAttribute), true)[0]).Order);
         }
 
         /* public static IOrderedEnumerable<PropertyInfo> GetSortedProperties<T>()
