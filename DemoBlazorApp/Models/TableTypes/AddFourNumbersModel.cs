@@ -1,6 +1,7 @@
 ﻿namespace DemoBlazorApp.Models.TableTypes
 {
-    using DemoBlazorApp.Library;
+    using Services;
+    using Library;
     using System;
     using System.ComponentModel;
 
@@ -11,8 +12,10 @@
         private int number3 = 0;
         private int number4 = 0;
 
-        public AddFourNumbersModel() {
-            PropertyChanged += (sender, r) => GetTotal();
+        public AddFourNumbersModel(IMathService service) : base(service)
+        {
+            // ToDo: Assign handler from component & dispose (unsubscribe)
+            // PropertyChanged += (sender, arg) => GetTotal();
         }
 
         /// <summary>
@@ -83,14 +86,15 @@
         /// </summary>
         [Order]
         [HtmlInput(key: "type", value: "number")]
-        public int Total { get; set; } = 0;
+        [HtmlInput(key: "readonly", value: "readonly")]
+        public double Total { get; set; } = 0;
 
         /// <summary>
         /// The get total.
         /// </summary>
-        public void GetTotal()
+        public override void GetTotal()
         {
-            this.Total = this.Number1 + this.Number2 + this.Number3 + this.Number4;
+            this.Total = base.MathService.Add(this.Number1, this.Number2, this.Number3, this.Number4);
             Console.WriteLine($"{nameof(this.Total)} has been set to {this.Total}");
         }
     }

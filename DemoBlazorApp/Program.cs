@@ -40,6 +40,7 @@ namespace DemoBlazorApp
             builder.Services.AddSingleton<StateContainer>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<ITableService, TableService>();
+            builder.Services.AddSingleton<IMathService, MathService>();
 
             await builder.Build().RunAsync();
         }

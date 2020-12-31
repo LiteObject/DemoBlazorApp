@@ -4,12 +4,13 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Runtime.CompilerServices;
-    using DemoBlazorApp.Library;
+    using Services;
+    using Library;
 
     /// <summary>
     /// The base mode.
     /// </summary>
-    public abstract class BaseModel
+    public abstract class BaseModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,15 +18,20 @@
         {
             Console.WriteLine($"{nameof(OnPropertyChanged)} has been invoked by {name}");            
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            GetTotal();
         }
 
-        protected void OnPropertyChanged(PropertyChangedEventArgs e)
+        /* protected void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            handler?.Invoke(this, e);
+        } */
+
+        protected readonly IMathService MathService;
+
+        protected BaseModel(IMathService service)
+        {
+            this.MathService = service ?? throw new ArgumentNullException(nameof(service));
         }
 
         /// <summary>
@@ -43,12 +49,11 @@
         [Order(2)]
         public string Name { get; set; } = "Not available";
 
+        public abstract void GetTotal();
+
         public virtual void UpdateModel(Action action)
         {
-            if (action != null)
-            {
-                action.Invoke();
-            }            
+            action?.Invoke();
         }
     }
 }

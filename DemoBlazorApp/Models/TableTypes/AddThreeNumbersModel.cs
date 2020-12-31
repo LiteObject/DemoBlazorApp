@@ -1,9 +1,8 @@
 ﻿namespace DemoBlazorApp.Models
 {
-    using DemoBlazorApp.Library;
+    using Services;
+    using Library;
     using System;
-    using System.ComponentModel;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// The table math model.
@@ -14,9 +13,10 @@
         private int number2 = 0;
         private int number3 = 0;
 
-        public AddThreeNumbersModel()
+        public AddThreeNumbersModel(IMathService service): base(service)
         {
-            PropertyChanged += (sender, r) => GetTotal();
+            // ToDo: Assign handler from component & dispose (unsubscribe)
+            // PropertyChanged += (sender, arg) => GetTotal();
         }
 
         /// <summary>
@@ -65,14 +65,15 @@
         /// </summary>
         [Order]
         [HtmlInput(key: "type", value: "number")]
-        public int Total { get; set; } = 0;
+        [HtmlInput(key: "readonly", value: "readonly")]
+        public double Total { get; set; } = 0;
 
         /// <summary>
         /// The get total.
         /// </summary>
-        public void GetTotal()
+        public override void GetTotal()
         {
-            this.Total = this.Number1 + this.Number2 + this.Number3;
+            this.Total = base.MathService.Add(this.Number1, this.Number2, this.Number3);
             Console.WriteLine($"{nameof(this.Total)} has been set to {this.Total}");
         }
     }

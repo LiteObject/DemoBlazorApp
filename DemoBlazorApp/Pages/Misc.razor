@@ -1,0 +1,29 @@
+﻿@page "/misc"
+@using DemoBlazorApp.Components
+
+<h3>Misc</h3>
+
+<div class="card">
+    <div class="card-header">
+        <div class="text-info">This is an example of in-memory state container service.</div>
+        <div class="text-muted">
+            Source: https://docs.microsoft.com/en-us/aspnet/core/blazor/state-management?view=aspnetcore-5.0&pivots=webassembly
+        </div>
+    </div>
+    <div class="card-body">
+        <Component1></Component1>
+        <br />
+        <Component2></Component2>
+    </div>
+</div>
+<br />
+
+<div class="card">
+    <div class="card-body">
+        <LocalStorageComponent></LocalStorageComponent>
+    </div>
+</div>
+
+@code {
+
+}

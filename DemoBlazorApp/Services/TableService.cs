@@ -3,8 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using DemoBlazorApp.Models;
-    using DemoBlazorApp.Models.TableTypes;
+    using Models;
+    using Models.TableTypes;
 
     /// <summary>
     /// The table service.
@@ -24,24 +24,14 @@
             this.tables.Add(
                 new TableType
                     {
-                        Id = 1, Name = nameof(TableOneModel), Description = "Table One", Type = typeof(TableOneModel)
-                    });
-            this.tables.Add(
-                new TableType
-                    {
-                        Id = 2, Name = nameof(TableTwoModel), Description = "Table Two", Type = typeof(TableTwoModel)
-                    });
-            this.tables.Add(
-                new TableType
-                    {
-                        Id = 3,
+                        Id = 1,
                         Name = nameof(AddThreeNumbersModel),
                         Description = "Add three number",
                         Type = typeof(AddThreeNumbersModel)
                     });
             this.tables.Add(
                     new TableType {
-                        Id = 4,
+                        Id = 2,
                         Name = nameof(AddFourNumbersModel),
                         Description = "Add Four Number",
                         Type = typeof(AddFourNumbersModel)
