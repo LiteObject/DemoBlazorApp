@@ -16,7 +16,7 @@
 
         protected void OnPropertyChanged([CallerMemberName] string name = null)
         {
-            Console.WriteLine($"{nameof(OnPropertyChanged)} has been invoked by {name}");            
+            Util.Log($"{nameof(OnPropertyChanged)} has been invoked by {name}");            
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
             GetTotal();
         }

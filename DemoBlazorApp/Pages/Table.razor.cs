@@ -1,4 +1,6 @@
-﻿namespace DemoBlazorApp.Pages
+﻿using DemoBlazorApp.Library;
+
+namespace DemoBlazorApp.Pages
 {
     using System;
     using System.Collections.Generic;
@@ -62,12 +64,12 @@
                 // ToDo: Throw exception
                 if (this.SelectedTableType != null && this.SelectedTableType.Id == 0)
                 {
-                    Console.WriteLine($"Unable to set {nameof(this.SelectedTableType)} value.");
+                    Util.Log($"Unable to set {nameof(this.SelectedTableType)} value.");
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Util.Log(e);
                 return;
             }
         }

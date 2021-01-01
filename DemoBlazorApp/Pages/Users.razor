@@ -1,32 +1,75 @@
 ﻿@page "/users"
-@using DemoBlazorApp.Models;
 
 <h3>Users</h3>
 
+@if (userApiResponse != null && userApiResponse.Results.Length > 0)
+{
 
+    <table class="table table-sm table-dark table-responsive">
+        <thead>
+            <tr>
+                @*<td>Id</td>*@
+                <td>Image</td>
+                <td>Name</td>
+                <td>Email</td>
+                <td>Phone</td>
+                <td>City</td>
+                <td>Country</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in userApiResponse.Results)
+            {
+                <tr>
+                    @*<td>
+                        @user.Id.Value
+                    </td>*@
+                    <td>
+                        <img src="@user.Picture.Thumbnail" class="img-thumbnail"/>
+                    </td>
+                    <td>
+                        @*@($"{user.Name.First} {user.Name.Last}")*@
+                        @user.Name.GetFullNameWithTitle()
+                    </td>
+                    <td>
+                        @user.Email
+                    </td>
+                    <td>
+                        @user.Phone
+                    </td>
+                    <td>
+                        @user.Location.City
+                    </td>
+                    <td>
+                        @user.Location.Country
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-success" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-danger" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-warning" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+    <div class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+}
 
-
-<table>
-    <thead>
-        <tr>
-            <td>Id</td>
-            <td>Name</td>
-            <td>Email</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in users) { 
-        <tr @onclick="@(() => OnUpdate(user))">
-            <td>
-            <input type="number" @bind-value="@user.Id" />
-                </td>
-            <td>
-                <input type="text" @bind-value="@user.Name" />
-                </td>
-            <td>
-                <input type="text" @bind-value="@user.Email" />                
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>

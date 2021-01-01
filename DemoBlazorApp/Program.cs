@@ -34,13 +34,15 @@ namespace DemoBlazorApp
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            // builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://randomuser.me") });
 
             builder.Services.AddScoped<ITableFactory, TableFactory>();
             builder.Services.AddSingleton<StateContainer>();
             builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<ITableService, TableService>();
             builder.Services.AddSingleton<IMathService, MathService>();
+            builder.Services.AddSingleton<IDynamicTableService, DynamicTableService>();
 
             await builder.Build().RunAsync();
         }

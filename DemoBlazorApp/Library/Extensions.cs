@@ -144,7 +144,7 @@
                 
                 if (rawAttributes.Any() == false)
                 {
-                    Console.WriteLine("No input attributes found");
+                    Util.Log("No input attributes found");
                 }
                 else
                 {

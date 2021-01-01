@@ -1,4 +1,6 @@
-﻿namespace DemoBlazorApp.Pages
+﻿using DemoBlazorApp.Library;
+
+namespace DemoBlazorApp.Pages
 {
     using System;
     using System.Collections.Generic;
@@ -32,7 +34,7 @@
         public void OnSelection(ChangeEventArgs e)
         {
             this.selectedModel = e.Value?.ToString() ?? string.Empty;
-            Console.WriteLine($"Selected Model: {this.selectedModel}");
+            Util.Log($"Selected Model: {this.selectedModel}");
 
             switch (this.selectedModel)
             {
@@ -76,7 +78,7 @@
         private void SetColumns(Type type)
         {
             var cols = type.GetProperties().Select(p => p.Name).ToList();
-            cols.ForEach(Console.WriteLine);
+            cols.ForEach(c => Util.Log(c));
             this.columns.AddRange(cols);
         }
     }

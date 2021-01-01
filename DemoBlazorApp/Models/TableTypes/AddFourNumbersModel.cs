@@ -95,7 +95,7 @@
         public override void GetTotal()
         {
             this.Total = base.MathService.Add(this.Number1, this.Number2, this.Number3, this.Number4);
-            Console.WriteLine($"{nameof(this.Total)} has been set to {this.Total}");
+            Util.Log($"{nameof(this.Total)} has been set to {this.Total}");
         }
     }
 }

@@ -33,7 +33,7 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Util.Log(e);
                 throw;
             } */
         }
@@ -55,7 +55,7 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Util.Log(e);
                 throw;
             }
         } */
